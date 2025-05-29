@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  campus_postgres:
+    image: postgres:latest
+    container_name: campus_postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: campus
+      POSTGRES_PASSWORD: campus
+      POSTGRES_DB: campus_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - campus
+
+volumes:
+  postgres_data:
+
+
+networks:
+  campus:
+    driver: bridge
