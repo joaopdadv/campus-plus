@@ -27,6 +27,15 @@ services:
     depends_on:
       - campus_postgres
 
+  campus_front:
+    build:
+      context: ./front
+    container_name: sveltekit_frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - campus
+
 volumes:
   postgres_data:
 
