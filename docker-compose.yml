@@ -16,6 +16,17 @@ services:
     networks:
       - campus
 
+  campus_back:
+    build:
+      context: ./back
+    container_name: campus_back
+    ports:
+      - "8080:8080"
+    networks:
+      - campus
+    depends_on:
+      - campus_postgres
+
 volumes:
   postgres_data:
 
