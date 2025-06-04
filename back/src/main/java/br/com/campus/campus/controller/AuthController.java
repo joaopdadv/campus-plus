@@ -1,43 +1,52 @@
+package br.com.campus.campus.controller;
+
+import br.com.campus.campus.config.JwtUtil;
+import br.com.campus.campus.entity.auth.User;
+import br.com.campus.campus.entity.auth.dto.AuthRequest;
+import br.com.campus.campus.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import com.exemplo.auth.dto.AuthRequest;
-import com.exemplo.auth.dto.AuthResponse;
-import com.exemplo.auth.entity.User;
-import com.exemplo.auth.repository.UserRepository;
-import com.exemplo.auth.service.JwtService;
-
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
-
     @Autowired
-    private AuthenticationManager authManager;
-
+    AuthenticationManager authenticationManager;
     @Autowired
-    private UserRepository repo;
-
+    UserRepository userRepository;
     @Autowired
-    private JwtService jwtService;
+    PasswordEncoder encoder;
+    @Autowired
+    JwtUtil jwtUtils;
 
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody AuthRequest request) {
-        Authentication auth = authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.username(), request.password()));
+    public String authenticateUser(@RequestBody AuthRequest user) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        user.getUsername(),
+                        user.getPassword()));
 
-        User user = repo.findByUsername(request.username()).orElseThrow();
-        String jwt = jwtService.generateToken((UserDetails) auth.getPrincipal());
-        return new AuthResponse(jwt);
+        System.out.println(authentication);
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return jwtUtils.generateToken(userDetails.getUsername());
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody AuthRequest request) {
-        String hash = new BCryptPasswordEncoder().encode(request.password());
-        repo.save(new User(null, request.username(), hash, "USER"));
-        return "User created!";
+    public String registerUser(@RequestBody User user) {
+        if (userRepository.existsByUsername(user.getUsername())) {
+            return "Error: Username is already taken!";
+        }
+        // Create new user's account
+        User newUser = new User(
+                null,
+                user.getUsername(),
+                encoder.encode(user.getPassword()));
+        userRepository.save(newUser);
+        return "User registered successfully!";
     }
 }

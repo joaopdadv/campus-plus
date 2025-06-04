@@ -1,9 +1,10 @@
-package br.com.campus.campus.entity.dto;
+package br.com.campus.campus.entity.auth.dto;
 
 public class AuthResponse {
     private String token;
 
-    public AuthResponse() {}
+    public AuthResponse() {
+    }
 
     public AuthResponse(String token) {
         this.token = token;
