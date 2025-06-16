@@ -2,23 +2,18 @@ package br.com.campus.campus.entity.auth;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
-@Table(name = "users")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(unique = true)
-    private String email;
-    private String password;
+public class UserResponse {
 
-    public User(Long id, String email, String password) {
+    private Long id;
+    private String email;
+
+    public UserResponse(Long id, String email) {
         this.id = id;
         this.email = email;
-        this.password = password;
     }
 
     public Long getId() {
@@ -35,13 +30,5 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }
