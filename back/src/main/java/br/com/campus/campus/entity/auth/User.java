@@ -1,7 +1,9 @@
 package br.com.campus.campus.entity.auth;
 
+import br.com.campus.campus.service.AuthService;
 import jakarta.persistence.*;
 import lombok.*;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,6 +16,8 @@ public class User {
     @Column(unique = true)
     private String email;
     private String password;
+    @Enumerated(EnumType.STRING) // ou ORDINAL, se preferir salvar como número
+    private AuthService.UserRole role = AuthService.UserRole.ALUNO;
 
     public User(Long id, String email, String password) {
         this.id = id;
@@ -21,27 +25,4 @@ public class User {
         this.password = password;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

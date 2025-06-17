@@ -1,6 +1,6 @@
-package br.com.campus.campus.entity.auth;
+package br.com.campus.campus.entity.auth.dto;
 
-import jakarta.persistence.*;
+import br.com.campus.campus.service.AuthService;
 import lombok.*;
 
 @Getter
@@ -10,25 +10,11 @@ public class UserResponse {
 
     private Long id;
     private String email;
+    private AuthService.UserRole role;
 
     public UserResponse(Long id, String email) {
         this.id = id;
         this.email = email;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }
