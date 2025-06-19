@@ -1,5 +1,6 @@
 package br.com.campus.campus.config;
 
+import br.com.campus.campus.service.AuthService;
 import br.com.campus.campus.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -40,6 +41,7 @@ public class WebSecurityConfig {
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
+//                        .requestMatchers("/api/auth/register").hasAnyRole(AuthService.UserRole.ALUNO.toString())
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class) // <-- ESSA LINHA
