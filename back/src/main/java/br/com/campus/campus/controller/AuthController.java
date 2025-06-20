@@ -40,6 +40,20 @@ public class AuthController {
                 .body(res);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout() {
+        ResponseCookie cookie = ResponseCookie.from(jwtCookieName, null)
+                .httpOnly(true)
+                .path("/")
+                .secure(false) // Deve corresponder às configurações do cookie de login
+                .maxAge(0) // Expira o cookie imediatamente
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .build();
+    }
+
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(
         @RequestBody User user
