@@ -1,50 +1,51 @@
 <script lang="ts">
+    import { createForm } from "felte";
+    import { validator } from "@felte/validator-zod";
+    import { z } from "zod";
+
     import * as Dialog from "$lib/components/ui/dialog/index.js";
     import Button from "$lib/components/ui/button/button.svelte";
     import Input from "$lib/components/ui/input/input.svelte";
     import Label from "$lib/components/ui/label/label.svelte";
 
-    // 1. Importe sua função de login e os tipos necessários
-    import type { ILoginResponse } from "$lib/types/auth";
-    import { goto } from "$app/navigation"; // Para redirecionar após o login
+    import { goto } from "$app/navigation";
     import { login } from "$lib/api/auth/authApi";
+    import { browser } from "$app/environment";
+    import { writable } from "svelte/store";
 
-    // 2. Crie variáveis para gerenciar o estado do formulário
-    let email = "";
-    let password = "";
-    let isLoading = false;
-    let errorMessage = "";
+    const serverError = writable("");
 
-    // 3. Crie a função para manipular o login
-    async function handleLogin() {
-        if (!email || !password) {
-            errorMessage = "Por favor, preencha o e-mail e a senha.";
-            return;
-        }
+    const schema = z.object({
+        email: z.string().email("Por favor, insira um e-mail válido."),
+        password: z.string().min(1, "A senha não pode estar em branco."),
+    });
 
-        isLoading = true;
-        errorMessage = "";
-
-        try {
-            // 4. Chame a função da API
-            const response: ILoginResponse = await login({ email, password });
-
-            // 5. Lide com o sucesso
-            // Por exemplo, armazene o token e redirecione o usuário
-            // localStorage.setItem('authToken', response.token);
-            console.log("Login bem-sucedido:", response);
-
-            // Redireciona para o dashboard ou outra página protegida
-            await goto("/dashboard");
-        } catch (error) {
-            // 6. Lide com o erro
-            console.error("Erro no login:", error);
-            errorMessage =
-                "Credenciais inválidas ou erro no servidor. Tente novamente.";
-        } finally {
-            isLoading = false;
-        }
-    }
+    const { form, errors, isSubmitting } = browser
+        ? createForm({
+              onSubmit: async (values) => {
+                  try {
+                      await login(values);
+                      await goto("/dashboard");
+                  } catch (error) {
+                      if (error instanceof Error) {
+                          serverError.set(
+                              error.message ||
+                                  "Ocorreu um erro. Tente novamente.",
+                          );
+                      } else {
+                          serverError.set(
+                              "Ocorreu um erro inesperado. Tente novamente mais tarde.",
+                          );
+                      }
+                  }
+              },
+              extend: validator({ schema }),
+          })
+        : {
+              form: () => {},
+              errors: writable({}),
+              isSubmitting: writable(false),
+          };
 </script>
 
 <Dialog.Root>
@@ -62,41 +63,41 @@
             </Dialog.Description>
         </Dialog.Header>
 
-        <form on:submit|preventDefault={handleLogin} class="grid gap-4 py-4">
+        <form use:form class="grid gap-4 py-4">
             <div class="grid w-full max-w-sm items-center gap-1.5">
                 <Label for="email">Email</Label>
-                <div class="relative">
-                    <Input
-                        id="email"
-                        type="email"
-                        placeholder="seu@email.com"
-                        class="pl-8"
-                        bind:value={email}
-                        disabled={isLoading}
-                    />
-                </div>
+                <Input
+                    id="email"
+                    type="email"
+                    name="email"
+                    placeholder="seu@email.com"
+                    aria-invalid={$errors.email ? "true" : undefined}
+                />
+                {#if $errors.email}
+                    <p class="text-sm text-red-500">{$errors.email[0]}</p>
+                {/if}
             </div>
             <div class="grid w-full max-w-sm items-center gap-1.5">
                 <Label for="password">Senha</Label>
-                <div class="relative">
-                    <Input
-                        id="password"
-                        type="password"
-                        placeholder="Sua senha"
-                        class="pl-8"
-                        bind:value={password}
-                        disabled={isLoading}
-                    />
-                </div>
+                <Input
+                    id="password"
+                    type="password"
+                    name="password"
+                    placeholder="Sua senha"
+                    aria-invalid={$errors.password ? "true" : undefined}
+                />
+                {#if $errors.password}
+                    <p class="text-sm text-red-500">{$errors.password[0]}</p>
+                {/if}
             </div>
 
-            {#if errorMessage}
-                <p class="text-sm text-red-500">{errorMessage}</p>
+            {#if $serverError}
+                <p class="text-sm text-red-500">{$serverError}</p>
             {/if}
 
             <Dialog.Footer>
-                <Button type="submit" class="w-full" disabled={isLoading}>
-                    {#if isLoading}
+                <Button type="submit" class="w-full" disabled={$isSubmitting}>
+                    {#if $isSubmitting}
                         Entrando...
                     {:else}
                         Entrar
