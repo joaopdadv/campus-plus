@@ -1,10 +1,8 @@
-<script lang="ts">
-	import Toasts from "$lib/components/global/toast/Toasts.svelte";
-	import "../app.css";
+<script>import Toasts from "$lib/components/global/toast/Toasts.svelte";
+import "../app.css";
 
-	let { children } = $props();
-</script>
+let { children } = $props();</script>
 
-<Toasts />
+<Toasts></Toasts>
 
 {@render children()}
