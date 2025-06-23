@@ -13,6 +13,7 @@
     import { writable } from "svelte/store";
     import Controller from "../forms/Controller.svelte";
     import FormError from "../forms/FormError.svelte";
+    import { addToast } from "$lib/store/toast";
 
     const serverError = writable("");
 
@@ -33,6 +34,13 @@
                               error.message ||
                                   "Ocorreu um erro. Tente novamente.",
                           );
+                          addToast({
+                              message:
+                                  error.message ||
+                                  "Ocorreu um erro. Tente novamente.",
+                              type: "error",
+                              timeout: 3000,
+                          });
                       } else {
                           serverError.set(
                               "Ocorreu um erro inesperado. Tente novamente mais tarde.",
