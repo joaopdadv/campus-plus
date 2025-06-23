@@ -6,12 +6,13 @@
     import * as Dialog from "$lib/components/ui/dialog/index.js";
     import Button from "$lib/components/ui/button/button.svelte";
     import Input from "$lib/components/ui/input/input.svelte";
-    import Label from "$lib/components/ui/label/label.svelte";
 
     import { goto } from "$app/navigation";
     import { login } from "$lib/api/auth/authApi";
     import { browser } from "$app/environment";
     import { writable } from "svelte/store";
+    import Controller from "../forms/Controller.svelte";
+    import FormError from "../forms/FormError.svelte";
 
     const serverError = writable("");
 
@@ -58,42 +59,33 @@
     <Dialog.Content class="sm:max-w-[425px]">
         <Dialog.Header>
             <Dialog.Title>Acessar Plataforma</Dialog.Title>
-            <Dialog.Description>
-                Entre com seu e-mail e senha para continuar.
-            </Dialog.Description>
+            <Dialog.Description
+                >Entre com seu e-mail e senha para continuar.</Dialog.Description
+            >
         </Dialog.Header>
 
         <form use:form class="grid gap-4 py-4">
-            <div class="grid w-full max-w-sm items-center gap-1.5">
-                <Label for="email">Email</Label>
+            <Controller label="Email" error={$errors.email?.[0]} let:id>
                 <Input
-                    id="email"
+                    {id}
                     type="email"
                     name="email"
                     placeholder="seu@email.com"
                     aria-invalid={$errors.email ? "true" : undefined}
                 />
-                {#if $errors.email}
-                    <p class="text-sm text-red-500">{$errors.email[0]}</p>
-                {/if}
-            </div>
-            <div class="grid w-full max-w-sm items-center gap-1.5">
-                <Label for="password">Senha</Label>
+            </Controller>
+
+            <Controller label="Senha" error={$errors.password?.[0]} let:id>
                 <Input
-                    id="password"
+                    {id}
                     type="password"
                     name="password"
                     placeholder="Sua senha"
                     aria-invalid={$errors.password ? "true" : undefined}
                 />
-                {#if $errors.password}
-                    <p class="text-sm text-red-500">{$errors.password[0]}</p>
-                {/if}
-            </div>
+            </Controller>
 
-            {#if $serverError}
-                <p class="text-sm text-red-500">{$serverError}</p>
-            {/if}
+            <FormError message={$serverError} />
 
             <Dialog.Footer>
                 <Button type="submit" class="w-full" disabled={$isSubmitting}>
