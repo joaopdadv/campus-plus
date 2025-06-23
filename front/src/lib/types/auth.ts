@@ -20,5 +20,6 @@ export interface ILoginResponse {
 export interface IRegisterRequest {
     email: string;
     password: string;
+    role: Omit<USER_ROLE, USER_ROLE.ADMIN>;
 }
 

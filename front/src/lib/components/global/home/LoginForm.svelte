@@ -3,7 +3,6 @@
     import { validator } from "@felte/validator-zod";
     import { z } from "zod";
 
-    import * as Dialog from "$lib/components/ui/dialog/index.js";
     import Button from "$lib/components/ui/button/button.svelte";
     import Input from "$lib/components/ui/input/input.svelte";
 
@@ -57,59 +56,34 @@
           };
 </script>
 
-<Dialog.Root>
-    <Dialog.Trigger>
-        <div class="p-4 bg-blue-500 text-white rounded-md cursor-pointer">
-            Login Dialog
-        </div>
-    </Dialog.Trigger>
+<form use:form class="grid gap-4 py-4">
+    <Controller label="Email" error={$errors.email?.[0]} let:id>
+        <Input
+            {id}
+            type="email"
+            name="email"
+            placeholder="seu@email.com"
+            aria-invalid={$errors.email ? "true" : undefined}
+        />
+    </Controller>
 
-    <Dialog.Content
-        class="sm:max-w-[425px]"
-        tabindex={-1}
-        onOpenAutoFocus={(event) => {
-            event.preventDefault();
-        }}
-    >
-        <Dialog.Header>
-            <Dialog.Title>Acessar Plataforma</Dialog.Title>
-            <Dialog.Description
-                >Entre com seu e-mail e senha para continuar.</Dialog.Description
-            >
-        </Dialog.Header>
+    <Controller label="Senha" error={$errors.password?.[0]} let:id>
+        <Input
+            {id}
+            type="password"
+            name="password"
+            placeholder="Sua senha"
+            aria-invalid={$errors.password ? "true" : undefined}
+        />
+    </Controller>
 
-        <form use:form class="grid gap-4 py-4">
-            <Controller label="Email" error={$errors.email?.[0]} let:id>
-                <Input
-                    {id}
-                    type="email"
-                    name="email"
-                    placeholder="seu@email.com"
-                    aria-invalid={$errors.email ? "true" : undefined}
-                />
-            </Controller>
+    <FormError message={$serverError} />
 
-            <Controller label="Senha" error={$errors.password?.[0]} let:id>
-                <Input
-                    {id}
-                    type="password"
-                    name="password"
-                    placeholder="Sua senha"
-                    aria-invalid={$errors.password ? "true" : undefined}
-                />
-            </Controller>
-
-            <FormError message={$serverError} />
-
-            <Dialog.Footer>
-                <Button type="submit" class="w-full" disabled={$isSubmitting}>
-                    {#if $isSubmitting}
-                        Entrando...
-                    {:else}
-                        Entrar
-                    {/if}
-                </Button>
-            </Dialog.Footer>
-        </form>
-    </Dialog.Content>
-</Dialog.Root>
+    <Button type="submit" class="w-full" disabled={$isSubmitting}>
+        {#if $isSubmitting}
+            Entrando...
+        {:else}
+            Entrar
+        {/if}
+    </Button>
+</form>

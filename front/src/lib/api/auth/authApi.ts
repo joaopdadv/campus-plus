@@ -15,10 +15,11 @@ export async function logout(): Promise<void> {
     await api.post('/auth/logout');
 }
 
-export async function register({ email, password }: IRegisterRequest): Promise<IUser> {
+export async function register({ email, password, role }: IRegisterRequest): Promise<IUser> {
     const response = await api.post<IUser>('/auth/register', {
         email,
-        password
+        password,
+        role
     });
 
     return response.data;
