@@ -64,7 +64,13 @@
         </div>
     </Dialog.Trigger>
 
-    <Dialog.Content class="sm:max-w-[425px]">
+    <Dialog.Content
+        class="sm:max-w-[425px]"
+        tabindex={-1}
+        onOpenAutoFocus={(event) => {
+            event.preventDefault();
+        }}
+    >
         <Dialog.Header>
             <Dialog.Title>Acessar Plataforma</Dialog.Title>
             <Dialog.Description
