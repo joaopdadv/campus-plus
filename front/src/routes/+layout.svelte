@@ -1,8 +1,9 @@
-<script>import Toasts from "$lib/components/global/toast/Toasts.svelte";
-import "../app.css";
+<script>
+	import { Toaster } from "svelte-sonner";
+	import "../app.css";
 
-let { children } = $props();</script>
+	let { children } = $props();
+</script>
 
-<Toasts></Toasts>
-
+<Toaster position="top-center" />
 {@render children()}

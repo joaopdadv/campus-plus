@@ -9,11 +9,11 @@ else
   echo "Nenhum processo 'java' encontrado na porta 8080."
 fi
 
-FRONTEND_PID=$(lsof -i:3000 -t -sTCP:LISTEN)
+FRONTEND_PID=$(lsof -i:5173 -t -sTCP:LISTEN)
 
 if [ -n "$FRONTEND_PID" ]; then
   kill "$FRONTEND_PID"
-  echo "Frontend (processo 'node') na porta 3000 parado."
+  echo "Frontend (processo 'node') na porta 5173 parado."
 else
-  echo "Nenhum processo 'node' encontrado na porta 3000."
+  echo "Nenhum processo 'node' encontrado na porta 5173."
 fi

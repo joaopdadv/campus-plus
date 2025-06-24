@@ -2,7 +2,9 @@
     import * as Dialog from "$lib/components/ui/dialog/index.js";
     import { buttonVariants } from "$lib/components/ui/button/button.svelte";
     import LoginForm from "./LoginForm.svelte";
-    import RegisterForm from "./RegisterForm.svelte";
+    import type { PageData } from "../$types";
+
+    let { data }: { data: PageData } = $props();
 </script>
 
 <Dialog.Root>
@@ -24,8 +26,8 @@
             >
         </Dialog.Header>
 
-        <!-- <LoginForm /> -->
-        <RegisterForm />
+        <LoginForm {data} />
+        <!-- <RegisterForm /> -->
 
         <p>
             Ainda não tem uma conta? <strong
