@@ -3,6 +3,7 @@
     import { buttonVariants } from "$lib/components/ui/button/button.svelte";
     import LoginForm from "./LoginForm.svelte";
     import type { PageData } from "../$types";
+    import RegisterForm from "./RegisterForm.svelte";
 
     let { data }: { data: PageData } = $props();
 </script>
@@ -26,8 +27,8 @@
             >
         </Dialog.Header>
 
-        <LoginForm {data} />
-        <!-- <RegisterForm /> -->
+        <!-- <LoginForm {data} /> -->
+        <RegisterForm {data} />
 
         <p>
             Ainda não tem uma conta? <strong

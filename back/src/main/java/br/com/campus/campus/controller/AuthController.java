@@ -6,6 +6,7 @@ import br.com.campus.campus.entity.auth.dto.AuthRequest;
 import br.com.campus.campus.entity.auth.dto.AuthResponse;
 import br.com.campus.campus.entity.auth.dto.UserResponse;
 import br.com.campus.campus.service.AuthService;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;

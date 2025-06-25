@@ -7,6 +7,7 @@ import br.com.campus.campus.entity.auth.dto.AuthRequest;
 import br.com.campus.campus.entity.auth.dto.AuthResponse;
 import br.com.campus.campus.entity.auth.dto.UserResponse;
 import br.com.campus.campus.repository.UserRepository;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -48,9 +49,9 @@ public class AuthService {
         return resp;
     }
 
-    public UserResponse register(User user) {
+    public UserResponse register(User user) throws IllegalArgumentException {
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new IllegalArgumentException("Email is already taken!");
+            throw new IllegalArgumentException("Email já está em uso!");
         }
         user.setPassword(encoder.encode(user.getPassword()));
         User saved = userRepository.save(user);
