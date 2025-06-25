@@ -27,7 +27,6 @@
             switcherText: "Ainda não tem uma conta?",
             switcherLinkText: "Cadastre-se",
             switchTo: "register" as FormType,
-            onSuccessAction: () => {},
         },
         register: {
             component: RegisterForm,
@@ -37,7 +36,6 @@
             switcherText: "Já tem uma conta?",
             switcherLinkText: "Entre",
             switchTo: "login" as FormType,
-            onSuccessAction: () => closeDialog(),
         },
     };
 
@@ -50,10 +48,6 @@
     }
 
     let open = $state<boolean>(false);
-
-    function closeDialog() {
-        open = false;
-    }
 
     function onOpenChange(isOpen: boolean) {
         if (isOpen) {
@@ -82,10 +76,7 @@
         </Dialog.Header>
 
         {#key currentConfig.component}
-            <currentConfig.component
-                {data}
-                onSuccess={currentConfig.onSuccessAction}
-            />
+            <currentConfig.component {data} />
         {/key}
 
         <p class="text-sm text-center text-muted-foreground pt-4">
