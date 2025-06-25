@@ -8,9 +8,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: campus
+      POSTGRES_PASSWORD: campus
+      POSTGRES_DB: campus_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -20,8 +20,12 @@ services:
     build:
       context: ./back
     container_name: campus_back
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://campus_postgres:5432/campus_db
+      POSTGRES_USER: campus
+      POSTGRES_PASSWORD: campus
     ports:
-      - "${BACKEND_PORT}:8080"
+      - "8080:8080"
     networks:
       - campus
     depends_on:
@@ -32,7 +36,7 @@ services:
       context: ./front
     container_name: campus_front
     ports:
-      - "${FRONTEND_PORT}:3000"
+      - "3000:3000"
     networks:
       - campus
 
