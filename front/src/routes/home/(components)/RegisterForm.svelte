@@ -8,7 +8,6 @@
     } from "sveltekit-superforms";
     import { zodClient } from "sveltekit-superforms/adapters";
     import { toast } from "svelte-sonner";
-    import { goto } from "$app/navigation";
     import {
         registerSchema,
         type RegisterSchema,
@@ -18,15 +17,24 @@
 
     let {
         data,
-    }: { data: { registerForm: SuperValidated<Infer<RegisterSchema>> } } =
-        $props();
+        onSuccess,
+    }: {
+        data: { registerForm: SuperValidated<Infer<RegisterSchema>> };
+        onSuccess?: () => void;
+    } = $props();
 
     const form = superForm(data.registerForm, {
         validators: zodClient(registerSchema),
         onUpdated: ({ form: f }) => {
             if (f.valid) {
-                toast.success(f.message || "Cadastro realizado com sucesso!");
-                // TODO: mostrar form de login
+                toast.success(
+                    "Cadastro realizado com sucesso! Para continuar, faça login.",
+                );
+                if (onSuccess) {
+                    onSuccess();
+                }
+
+                //TODO: ao invés de redirecionar ou fechar, adicionar state de sucesso no form que mostra uma mensagem de sucesso com icone de check
             } else {
                 if (f.errors?._errors?.length) {
                     toast.error(f.errors._errors[0]);

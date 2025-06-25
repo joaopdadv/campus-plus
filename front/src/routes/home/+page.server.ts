@@ -29,7 +29,6 @@ export const actions: Actions = {
 
             return {
                 form,
-                message: "Login realizado com sucesso!"
             };
 
         } catch (error) {
@@ -57,7 +56,6 @@ export const actions: Actions = {
 
             return {
                 form,
-                message: "Cadastro realizado com sucesso! Efetue login para continuar."
             };
         } catch (error) {
             console.error("Erro na API de register:", error);
