@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  campus_postgres:
+  campus-postgres:
     image: postgres:latest
-    container_name: campus_postgres
+    container_name: campus-postgres
     restart: always
     ports:
       - "5432:5432"
@@ -16,27 +16,32 @@ services:
     networks:
       - campus
 
-  campus_back:
+  campus-back:
     build:
       context: ./back
-    container_name: campus_back
+    container_name: campus-back
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://campus_postgres:5432/campus_db
-      POSTGRES_USER: campus
-      POSTGRES_PASSWORD: campus
+      SPRING_DATASOURCE_URL: jdbc:postgresql://campus-postgres:5432/campus_db
+      SPRING_DATASOURCE_USERNAME: campus
+      SPRING_DATASOURCE_PASSWORD: campus
     ports:
       - "8080:8080"
     networks:
       - campus
     depends_on:
-      - campus_postgres
+      - campus-postgres
 
-  campus_front:
+  campus-front:
     build:
       context: ./front
-    container_name: campus_front
+      args:
+        - PUBLIC_API_BASE_URL=http://campus-back:8080/api
+    container_name: campus-front
+    environment:
+      - ORIGIN=http://localhost:5173
+      - PUBLIC_API_BASE_URL=http://campus-back:8080/api
     ports:
-      - "3000:3000"
+      - "5173:3000"
     networks:
       - campus
 

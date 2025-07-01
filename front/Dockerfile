@@ -1,5 +1,10 @@
 # Etapa de build
 FROM node:20 AS builder
+
+ARG PUBLIC_API_BASE_URL
+
+ENV PUBLIC_API_BASE_URL=$PUBLIC_API_BASE_URL
+
 WORKDIR /app
 COPY . .
 RUN npm ci
